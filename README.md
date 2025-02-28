@@ -1,7 +1,7 @@
 # HyneqLang
 A programming language created during the NTI/PRK course at the Technical University of Liberec
 
-# Syntax description
+# Language description
 
 ## Literals
 A literal in general will later be specified as `L`.
