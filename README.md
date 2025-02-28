@@ -76,7 +76,7 @@ The supported binary operators are:
   - `E^2` - power of expression result
 
 If there are more than two values are connected together using operators at the same bracket level, the following rules (in the specified order) apply:
-  1. the priority of operators - `^` > `*` > `+` `-` > `==` `!=` > `&` `|` > `&&` `||` > `=`
+  1. the priority of operators - `^` > `*` > `+` `-` > `==` `!=` `>` `<` `>=` `<=` > `&` `|` > `&&` `||` > `=`
   2. left-to-right processing
 
 ## Statements and blocks
