@@ -1,0 +1,152 @@
+Grammar ::= Program
+
+(** Character classes *)
+WhitespaceChar = " " | "\t" | "\n" | "\r"
+Whitespace ::= WhitespaceChar*
+WS ::= Whitespace
+
+ZeroDigit ::= "0"
+NonzeroDigit ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+Digit ::= ZeroDigit | NonzeroDigit
+
+LowerLetter ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
+UpperLetter ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "I" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+Letter ::= LowerLetter | UpperLetter
+
+AlphanumericChar ::= Letter | Digit
+
+(** LITERALS **)
+
+(* Boolean *)
+True ::= "true"
+False ::= "false"
+Boolean ::= True | False
+
+(* Numbers *)
+DecimalSeperator ::= "."
+PlusSign ::= "+"
+MinusSign ::= "-"
+
+ZeroIntPart ::= ZeroDigit
+NonzeroIntPart ::= NonzeroDigit Digit*
+IntPart ::= ZeroIntPart | NonzeroIntPart
+ZeroFracPart ::= ZeroDigit+
+NonzeroFracPart ::= ZeroDigit* NonzeroDigit Digit*
+FracPart ::= ZeroFracPart | NonzeroFracPart
+
+PositiveInt ::= PlusSign? IntPart
+NegativeInt ::= MinusSign NonzeroIntPart
+Int ::= PositiveInt | NegativeInt
+PositiveDecimal ::= PlusSign? IntPart DecimalSeperator FracPart
+NegativeDecimal ::= MinusSign (ZeroIntPart DecimalSeperator NonzeroFracPart | NonzeroIntPart DecimalSeperator FracPart)
+Decimal ::= PositiveDecimal | NegativeDecimal
+Number ::= Int | Decimal
+
+(* Strings *)
+(* The characters are currently limited to [a-zA-Z0-9.,+-* ] *)
+SpecialStringChar ::= "." | "," | "+" | "-" | "*"
+StringChar ::= AlphanumericChar | SpecialStringChar | Whitespace
+
+StringBody ::= StringChar*
+
+DoubleQuotedString ::= '"' StringBody '"'
+SingleQuotedString ::= "'" StringBody "'"
+String ::= SingleQuotedString | DoubleQuotedString
+
+(* A literal in general *)
+Literal ::= Boolean | Number | String
+
+
+(** VARIABLES **)
+VariableNameStartChar ::= Letter | "_"
+VariableNameChar ::= Letter | Digit | "_"
+
+Variable ::= VariableNameStartChar VariableNameChar*
+
+
+(** EXPRESSIONS **)
+Expression ::= Binary6Expression
+
+EnclosedExpression ::= "(" WS Expression WS ")"
+AtomExpression ::= Literal | Variable | FunctionCall | EnclosedExpression
+
+(* Function calls *)
+FunctionArgs ::= (Expression WS ("," WS Expression)* )?
+FunctionCall ::= Variable WS "(" WS FunctionArgs WS ")"
+
+(* Unary operators *)
+Factorial ::= AtomExpression WS "!"
+Negation ::= "!" WS EnclosedExpression
+UnaryExpression ::= AtomExpression | Factorial | Negation
+
+(* Binary operators level 0 *)
+Power ::= Binary0Expression WS "^" WS UnaryExpression
+Binary0Expression ::= UnaryExpression | Power
+
+(* Binary operators level 1 *)
+Multiplication ::= Binary1Expression WS "*" WS Binary0Expression
+Binary1Expression ::= Binary0Expression | Multiplication
+
+(* Binary operators level 2 *)
+Sum ::= Binary2Expression WS "+" WS Binary1Expression
+Diff ::= Binary2Expression WS "-" WS Binary1Expression
+Binary2Expression ::= Binary1Expression | Sum | Diff
+
+(* Binary operators level 3 *)
+EqualComparison ::= Binary3Expression WS "==" WS Binary2Expression
+NonequalComparison ::= Binary3Expression WS "!=" WS Binary2Expression
+GreaterThanComparison ::= Binary3Expression WS ">" WS Binary2Expression
+LowerThanComparison ::= Binary3Expression WS "<" WS Binary2Expression
+GreaterThanOrEqualComparison ::= Binary3Expression WS ">=" WS Binary2Expression
+LowerThanOrEqualComparison ::= Binary3Expression WS "<=" WS Binary2Expression
+Binary3Expression ::= Binary2Expression | EqualComparison | NonequalComparison | GreaterThanComparison | LowerThanComparison | GreaterThanOrEqualComparison | LowerThanOrEqualComparison
+
+(* Binary operators level 4 *)
+Conjunction ::= Binary4Expression WS "&" WS Binary3Expression
+Disjunction ::= Binary4Expression WS "|" WS Binary3Expression
+Binary4Expression ::= Binary3Expression | Conjunction | Disjunction
+
+(* Binary operators level 5 *)
+StopConjunction ::= Binary5Expression WS "&&" WS Binary4Expression
+StopDisjunction ::= Binary5Expression WS "||" WS Binary4Expression
+Binary5Expression ::= Binary4Expression | StopConjunction | StopDisjunction
+
+(* Binary operators level 6 *)
+Assignment ::= Variable WS "=" WS Binary6Expression
+Binary6Expression ::= Binary5Expression | Assignment
+
+
+(** STATEMETS AND BLOCKS **)
+ExpressionStatement ::= Expression WS ";"
+ReturnExpressionStatement ::= "return" WhitespaceChar WS Expression ";"
+SimpleStatement ::= ExpressionStatement | ReturnExpressionStatement
+
+BlockStatement ::= IfClause | WhileClause | FunctionDeclaration
+
+Statement ::= SimpleStatement | BlockStatement
+StatementList ::= WS (Statement WS)*
+EnclosedStatementList ::= "{" WS StatementList WS "}"
+
+(* If clause *)
+IfHeader ::= "if" WS EnclosedExpression
+ElifHeader ::= "elif" WS EnclosedExpression
+ElseHeader ::= "else"
+
+IfPart ::= IfHeader WS EnclosedStatementList
+ElifPart ::= ElifHeader WS EnclosedStatementList
+ElsePart ::= ElseHeader WS EnclosedStatementList
+
+IfClause ::= IfPart (WS ElifPart)* (WS ElsePart)?
+
+(* While clause *)
+WhileHeader ::= "while" WS EnclosedExpression
+
+WhileClause ::= WhileHeader WS EnclosedStatementList
+
+(* Function declaration *)
+FunctionDeclarationArgs ::= (Variable WS ("," WS Variable)* )?
+FunctionDeclarationHeader ::= "fun" WhitespaceChar WS Variable WS "(" WS FunctionDeclarationArgs WS ")"
+FunctionDeclaration ::= FunctionDeclarationHeader WS EnclosedStatementList
+
+(* Top-level program *)
+Program ::= StatementList
