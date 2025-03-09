@@ -12,7 +12,7 @@ fun print_hello(lang) {
         print(hello_string_de);
     } else {
         return hello_cycle();
-    };
+    }
 }
 
 fun get_lang(i) {
@@ -23,15 +23,15 @@ fun get_lang(i) {
     } elif (i == 2) {
         return "de";
     } else {
-        return "none"
-    };
+        return "none";
+    }
 }
 
 fun hello_cycle() {
     while (i >= 5) {
-        lang = get_lang(i)
-        print_hello(lang)
-    };
+        lang = get_lang(i);
+        print_hello(lang);
+    }
 }
 
 print_hello("cs");
