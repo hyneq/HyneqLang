@@ -1,7 +1,7 @@
 Grammar ::= Program
 
-(** Character classes *)
-WhitespaceChar = " " | "\t" | "\n" | "\r"
+(* Character classes *)
+WhitespaceChar ::= " " | "\t" | "\n" | "\r"
 Whitespace ::= WhitespaceChar*
 WS ::= Whitespace
 
@@ -14,6 +14,7 @@ UpperLetter ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" 
 Letter ::= LowerLetter | UpperLetter
 
 AlphanumericChar ::= Letter | Digit
+
 
 (** LITERALS **)
 
