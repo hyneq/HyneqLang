@@ -81,35 +81,35 @@ Negation ::= "!" WS EnclosedExpression
 UnaryExpression ::= AtomExpression | Factorial | Negation
 
 (* Binary operators level 0 *)
-Power ::= Binary0Expression WS "^" WS UnaryExpression
+Power ::= UnaryExpression WS "^" WS Binary0Expression
 Binary0Expression ::= UnaryExpression | Power
 
 (* Binary operators level 1 *)
-Multiplication ::= Binary1Expression WS "*" WS Binary0Expression
+Multiplication ::= Binary0Expression WS "*" WS Binary1Expression
 Binary1Expression ::= Binary0Expression | Multiplication
 
 (* Binary operators level 2 *)
-Sum ::= Binary2Expression WS "+" WS Binary1Expression
-Diff ::= Binary2Expression WS "-" WS Binary1Expression
+Sum ::= Binary1Expression WS "+" WS Binary2Expression
+Diff ::= Binary1Expression WS "-" WS Binary2Expression
 Binary2Expression ::= Binary1Expression | Sum | Diff
 
 (* Binary operators level 3 *)
-EqualComparison ::= Binary3Expression WS "==" WS Binary2Expression
-NonequalComparison ::= Binary3Expression WS "!=" WS Binary2Expression
-GreaterThanComparison ::= Binary3Expression WS ">" WS Binary2Expression
-LowerThanComparison ::= Binary3Expression WS "<" WS Binary2Expression
-GreaterThanOrEqualComparison ::= Binary3Expression WS ">=" WS Binary2Expression
-LowerThanOrEqualComparison ::= Binary3Expression WS "<=" WS Binary2Expression
+EqualComparison ::= Binary2Expression WS "==" WS Binary3Expression
+NonequalComparison ::= Binary2Expression WS "!=" WS Binary3Expression
+GreaterThanComparison ::= Binary2Expression WS ">" WS Binary3Expression
+LowerThanComparison ::= Binary2Expression WS "<" WS Binary3Expression
+GreaterThanOrEqualComparison ::= Binary2Expression WS ">=" WS Binary3Expression
+LowerThanOrEqualComparison ::= Binary2Expression WS "<=" WS Binary3Expression
 Binary3Expression ::= Binary2Expression | EqualComparison | NonequalComparison | GreaterThanComparison | LowerThanComparison | GreaterThanOrEqualComparison | LowerThanOrEqualComparison
 
 (* Binary operators level 4 *)
-Conjunction ::= Binary4Expression WS "&" WS Binary3Expression
-Disjunction ::= Binary4Expression WS "|" WS Binary3Expression
+Conjunction ::= Binary3Expression WS "&" WS Binary4Expression
+Disjunction ::= Binary3Expression WS "|" WS Binary4Expression
 Binary4Expression ::= Binary3Expression | Conjunction | Disjunction
 
 (* Binary operators level 5 *)
-StopConjunction ::= Binary5Expression WS "&&" WS Binary4Expression
-StopDisjunction ::= Binary5Expression WS "||" WS Binary4Expression
+StopConjunction ::= Binary4Expression WS "&&" WS Binary5Expression
+StopDisjunction ::= Binary4Expression WS "||" WS Binary5Expression
 Binary5Expression ::= Binary4Expression | StopConjunction | StopDisjunction
 
 (* Binary operators level 6 *)
