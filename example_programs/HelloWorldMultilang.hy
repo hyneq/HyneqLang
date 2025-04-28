@@ -28,9 +28,11 @@ fun get_lang(i) {
 }
 
 fun hello_cycle() {
-    while (i >= 5) {
+    i = 0;
+    while (i <= 5) {
         lang = get_lang(i);
         print_hello(lang);
+        i = i + 1;
     }
 }
 
