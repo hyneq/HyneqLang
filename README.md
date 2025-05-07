@@ -1,9 +1,28 @@
 # HyneqLang
-A programming language created during the NTI/PRK course at the Technical University of Liberec
+A programming language created during the NTI/PRK course at the Technical University of Liberec.
 
-# Language description
+Currently, programs can be parsed but there is no interpreter or compiler.
 
-## Literals
+## Project structure
+The repository contains the following important directories and files:
+  - `programs/` - the example programs, divided into valid and invalid examples
+  - `grammar.ebnf` - the grammar file in EBNF format usable for basic grammar-check tools
+  - `HyneqLang.g4` - the lexer and grammar file in Antlr4 format, used for parsing by make targets
+  - `Makefile` - contains validation targets, see below
+
+## Validation
+A Make target is used for validation.
+
+To validate both valid and invalid examples, run:
+
+    make clean
+    make validation
+
+This validation generates reports in the `validation/` directory with `valid/` and `invalid/` subdirectories, with a validation output for each validated source files.
+
+## Language description
+
+### Literals
 A literal in general will later be specified as `L`.
 
 The following literal types are supported:
@@ -16,7 +35,7 @@ The following literal types are supported:
 
 Numbers in general will later be specified as `N`.
 
-## Variables
+### Variables
 A variable name can contain alphanumeric characters (both upper and lower case) and an underscore. It must not start with a number or collide with keywords or boolean values, see below.
 
 Examples of valid variable names:
@@ -29,7 +48,7 @@ The type of variable is not recognized on the syntax level.
 
 A variable will later be specified as `X`.
 
-## Expressions
+### Expressions
 An expression in general will later be specified as `E`.
 
 An expression consists of values, which may have an unary operator attached, and are connected together using binary operators.
@@ -79,7 +98,7 @@ If there are more than two values are connected together using operators at the 
   1. the priority of operators - `^` > `*` > `+` `-` > `==` `!=` `>` `<` `>=` `<=` > `&` `|` > `&&` `||` > `=`
   2. left-to-right processing
 
-## Statements and blocks
+### Statements and blocks
 The program consists of a sequence of statements and blocks. A block contains a nested sequence of statements and blocks.
 
 A statement is a standalone expression terminated by `;`.
